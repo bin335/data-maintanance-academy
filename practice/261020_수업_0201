@@ -4,12 +4,12 @@ temp = 25
 name = "센서A"
 count = 3
 
-print(temp) #25 값
+print(temp) #25 
 print("temp")
 
 x=10
 x=x+5
-print(x) #15 값
+print(x) #15 
 
 # 변수 이름 규칙
 # 형식: 영문자, 숫자, 밑줄 사용 가능 / 숫자로 시작 불가 / 공백 불가
