@@ -4,7 +4,12 @@
 name= input("이름: ")
 age= input("나이: ")
 print(name)
-print(age) # 숫자를 입력해도 문자로 인식함/
+print(age) # input함수는 숫자를 입력해도 문자로 인식함
 
 # 형변환 - int(), float(), str()
-print(int(age)+1)  # 정상 인식
+age=25
+print(int(age)+1)  # int() 형변환 후 연산
+print("나이: " + str(age))
+
+height= float(164.5) #float() 실수 변환
+print(height,type(height))

@@ -12,12 +12,9 @@ print(notice)
 print("실습2: 설비 라벨 이어 붙이기")
 code= "pump_A"
 condition= "정상"
-date= str(2026-10-21)
+date= "2026-10-21"
 print(code+"/"+condition+"/"+date)
 
 print("실습3: 설비 정보 카드 만들기")
-name= "pump_A"
-condition= "good"
-run= 8
-date= 2026-10-21
-print("설비정보카드\n+name\n+condition\n+run\n+date")
+run= 13
+print("설비: "+ code + "\n상태: " + condition + "\n가동 시간: "+ str(run)+ "\n점검일: " + date)
