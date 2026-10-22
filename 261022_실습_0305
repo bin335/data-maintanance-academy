@@ -1,0 +1,14 @@
+print('실습1: 단어 바꾸기')
+word= '설비 정상 가동'
+print(word.replace('정상','점검'))
+
+print('실습2: 공백 기준으로 나누기')
+name= 'pump A 03'
+print(name.split())
+
+print('실습3: 쉼표 기준으로 나누기')
+data= 'a,b,c,d'
+print(data.split(','))
+
+print('실습4: 나누는 횟수 제한하기')
+print(data.split(',',1))

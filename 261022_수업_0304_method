@@ -1,0 +1,25 @@
+# 메서드 - 점(.) 문법
+# 형식: 문자열.메서드이름()  (--> 꼭 괄호를 붙여야 실행)
+word= 'python'
+print(word.upper())   # PYTHON (다만, 원본이 바뀌는 것은 아니다.)
+print(word.count('p'))   # 1 
+print(word)   # python (위에서 upper를 했음에도, 원본값은 그대로인 것 확인할 수 있다) 
+
+print('NORMAL'.lower())  # normal
+print('python is'.capitalize())  # Python is: 첫 글자를 대문자로 변환
+print('hong gil'.title())  # HONG GIL: 각 단어의 첫 글자를 대문자로 변환
+
+# 확인 메서드: is*** 메서드는 참/거짓 반환
+print('ABC'.isupper(),'abc'.islower())  # True  True
+
+# 공백 정리 - strip (앞뒤 지우기 전용)
+# 형식: .strip() 
+raw='  정상  '   
+print("["+raw+']') # [  정상  ]
+print('['+raw.strip()+']')  # [정상]
+
+# .lstrip() -> 왼쪽 공백 제거 / .rstrip() -> 오른쪽 공백 제거
+# 주의) strip은 앞,뒤 공백만 제거하고 가운데 공백은 제거X
+# 특정 문자 정리-> strip('문자')
+s= '###정상###'
+print(s.strip('#'))  # 정상
