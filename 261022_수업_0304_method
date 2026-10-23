@@ -23,3 +23,8 @@ print('['+raw.strip()+']')  # [정상]
 # 특정 문자 정리-> strip('문자')
 s= '###정상###'
 print(s.strip('#'))  # 정상
+
+# chanining - 메서드 이어 붙이기
+# 형식: 문자열.strip().lower() -> 왼쪽부터 차례로 적용
+clean = ' NORMAL '.strip().lower()
+print(clean)   # normal

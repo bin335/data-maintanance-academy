@@ -1,14 +1,30 @@
-print('실습1: 단어 바꾸기')
-word= '설비 정상 가동'
-print(word.replace('정상','점검'))
+# # print('실습1: 단어 바꾸기')
+# # word= '설비 정상 가동'
+# # print(word.replace('정상','점검'))
 
-print('실습2: 공백 기준으로 나누기')
-name= 'pump A 03'
-print(name.split())
+# print('실습2: 공백 기준으로 나누기')
+# name= 'pump A 03'
+# print(name.split())
 
-print('실습3: 쉼표 기준으로 나누기')
-data= 'a,b,c,d'
-print(data.split(','))
+# print('실습3: 쉼표 기준으로 나누기')
+# data= 'a,b,c,d'
+# print(data.split(','))
 
-print('실습4: 나누는 횟수 제한하기')
-print(data.split(',',1))
+# print('실습4: 나누는 횟수 제한하기')
+# print(data.split(',',1))
+
+print('실습5: 리스트 합치기')
+p= ['2025', '01', '15']
+print('-'.join(p))
+
+print('실습6: sep으로 이어 출력하기')
+print('2025','01','15',sep='-')
+print('2025','01','15',sep=',')
+
+print('실습7: 구분자 통째로 바꾸기')
+p= '2025/01/15'.split('/')
+print('-'.join(p))
+
+print('실습8: csv한 줄에서 값 꺼내 정리하기')
+p= '1,NORMAL,25.3'.split(',')
+print(p[1].strip().lower())

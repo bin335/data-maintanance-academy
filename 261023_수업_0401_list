@@ -1,0 +1,48 @@
+# 리스트
+# 형식: 이름 = [값1, 값2, ...] -> 따옴표로 꼭 감싸주어야 한다.
+# - 리스트는 여러 값을 '순서대로' 하나의 이름에 담는다.
+
+temps = [25,26,24,28,27]
+machines= ['펌프', '모터', '압축기']
+mixed=['펌프',87,True]  # Type이 달라도 한 리스트에 담을 수 있다
+
+print(len(temps))  # 5: list에서 len은 항목의 개수를 세어줌
+print(len([]))   # 0: 리스트를 지정하지 않았기에
+
+
+# 값 바꾸기/ in 존재 확인
+# 형식: 리스트[번호] = 새 값 / 값 in list
+nums= [25,26,24,28,27]
+nums[2]= 99
+print(nums)  # [25,26,99,28,27]
+
+# 값 추가 - append, insert, extend
+# 형식: 리스트.append(값) / 리스트.insert(위치, 값) / 리스트.extend(다른 리스트)
+data = [25,26,24]
+data.append(28)
+print(data)
+data.insert(2,99)
+print(data)
+data.extend([1,99])
+print(data)   
+
+# 값 삭제 - remove, pop, del
+# 형식: 리스트.remove(값) / 꺼낸 값 = list.pop(위치) / del 리스트[위치]
+d= [25,26,24,28,27]
+d.remove(24)  # 24제거
+print(d)
+got = d.pop(1)  # 1번값인 26 꺼내겠다
+print(got)
+del d[0]  # 인덱스 0에 있는 값인 25를 삭제하겠다
+print(d)
+
+# 정렬, 탐색 - sort, reverse / count, index
+# 형식: 리스트.sort()  .reverse()  .count(값)  .index(값)
+l=[27,24,30,22,26]
+l.sort(reverse=True)   # 30,27,27,24,22
+print(l)   # 30,27,27,24,22
+l.reverse()  
+print(l)  # 26 22 30 24 27
+
+r=['정상','이상', '정상','정상','이상']
+print(r.count('정상'), r.index('이상'))  # 3 1
