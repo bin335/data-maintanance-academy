@@ -38,3 +38,28 @@ print('EQP-001'.endswith('001'))
 # 주의) 컴퓨터는 대문자와 소문자를 다른 글씨로 봄 -> 통일 해야함
 label='WARNING'
 print(label=='warning') # False: 대소문자 통일 필요
+
+print('실습1: 길이 재기')
+num= '01012345678'
+print(len(num))
+
+print('실습2: 포함 확인하기')
+print('고장' in '설비 고장 발생')  # True
+print('정상' in '설비 고장 발생')  # False 
+
+print('실습3: 개수 세기')
+temp= 'sensor-01-temp'
+print(temp.count('-'))  # 2
+
+print('실습4: 위치 찾기')
+print('temp_2024'.find('_'))  # 4
+print('temp_2024'.find('s'))  # -1
+
+print('실습5: 시작과 끝 확인하기')
+word= 'sensor_long.csv'
+print('sensor_long.csv'.startswith('sensor'))  # True
+print(word.endswith('.csv'))  # True
+
+print('실습6: 대소문자 구분 확인하기')
+label='WARNING'
+print(label=='warning')  # False: 대소문자 구분

@@ -25,3 +25,76 @@ score = 10
 score = 20
 score = 30
 print(score) #30
+
+
+print("실습1: 변수 만들고 출력하기")
+temp = 25
+print(temp)
+name= "센서A"
+print(name)
+
+print("실습2: 앞 코드 수정하기")
+temp = 30
+temperature=temp
+print(temperature)
+
+print("실습3: 직접 변수 만들어 출력하기")
+my_number= 335
+print(my_number)
+mood = "졸림"
+print(mood)
+
+print("실습4: 나이, 점수, 개수 변수로 표현")
+age= 25
+label= "나이"
+print(label)
+print(age)
+
+print("실습5: 변수 값 바꿔가며 추적하기")
+x=10
+x=x+5 #15
+print(x)
+x=x*2 #30
+print(x)
+
+print("실습6: 두 변수 값 옮기고 바꾸기")
+a=100
+b = a  # 지금 a값(100)을 b에 복사하겠다. 즉, 순간의 값만 복사하겠다는 뜻
+a=999 # 바꿔도 b값에는 영향x
+print(a)
+print(b)
+
+print("실습7: 일부러 오류내고 고치기")
+temp=25
+print(temp)
+score=90
+print(score)
+
+print("실습8: 주석으로 변수 설명 달기")
+temp=25   # ℃
+count=3  # 센서 개수
+# temp= 100
+print(temp)
+
+print("실습9: 값 예측 미니 퀴즈")
+x=5
+x=10
+x=x+1 #11
+print(x)
+
+print("실습10: 정보 카드 만들기")
+temp= 1350 #℃
+count= 10 # 점검횟수
+name= "고온 진공 소결로"
+print(name, temp, count)
+
+print("실습11: 변수 이름 다듬기")
+furnace_temp= temp
+sensor_count= count
+print(furnace_temp) 
+print(sensor_count)
+
+print("실습12: 변수 한 줄 만들기 도전")
+width,height= 4,3
+print(width)
+print(height)
