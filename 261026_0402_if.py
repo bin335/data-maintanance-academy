@@ -85,10 +85,10 @@ current= int(input('전류: '))
 
 if temp>80 or vib>4.0:
     print('위험: 즉시정지')
-else:  # 중첩if
+else:  # 중첩if: 아래에 나오는 조건문은 else에 귀속되는 코드기에, 반드시 들여쓰기 -> Tab 들여쓰기
     if current>60 and temp>70:
         print('주의: 부하점검')
     elif vib>2.5:
-        print('주의: 진공관찰')
+        print('주의: 진동관찰')
     else:
         print('정상')

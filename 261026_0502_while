@@ -24,3 +24,31 @@ while n != goal:  #  n이 7이 아닌 동안 반복
         print('아직 조건값이 아니다.')
     else :
         print('정답입니다!')   
+
+
+# Break - 반복 도중에 완전히 멈추기
+for i in range(1,11):
+    if i == 5:
+        print(i,'break')
+        break 
+    print(i)   # 1 2 3 4 5 break
+
+for i in range(1,7):
+    if i % 2==0:  # 2로 나누었을 때 나머지가 0이 되는 것들
+        continue  # 만 제외하고
+    print(i)      # 출력하겠다.
+
+print('continue 연습')
+
+
+
+print('실습2: 플래그로 조건 만족 값 검색하기')
+found= False  # 아직 못 찾음 (조건변수 초기값 설정하는 대신에 bool타입으로 플래그 처리)
+n= int(input('횟수: '))
+
+for i in range(n):   # n번 반복할게.
+    v= int(input('측정값: '))
+    if v >80:
+        found=True
+        print('발견');break
+else: print('없음')
