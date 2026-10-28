@@ -1,0 +1,41 @@
+# 셋 - 중복 자동 제거, 순서 없음
+# 형식: {값1, 값2} 또는 set{리스트}
+# - 빈 셋 set()
+logs= ['s1','s2','s1','s3']
+unique_logs = set(logs)
+print(unique_logs)   # s3,s1,s2 -> 순서 없음 -> 인덱싱 불가능
+print(sorted(unique_logs))  # 오름차순으로 정리됨 -> 순서 생김 -> 인덱싱 가능
+
+# add 값 추가
+alerts = {'s1','s2'}
+alerts.add('s3')
+print(alerts)   # s1,s2,s3
+print('s2' in alerts)   # True
+
+print('실습4: 셋으로 중복 센서 제거하기')
+list_ID= ['abc','def','abc','ghi','def']
+set_ID= set(list_ID)  
+print(sorted(set_ID))
+print('종류수:',len(set_ID))   # 3
+
+# 집합 연산 - union(전체)/ intersection(공통)/ difference(차이)
+line_a = {'s1','s2','s3'}
+line_b= {'s3','s4'}
+print(line_a.union(line_b))  # 합집합
+print(line_a.intersection(line_b))   # 교집합
+print(line_a.difference(line_b))     # a에서 b를 뺀 차집합
+
+print('실습5: 두 라인의 센서 구성 비교하기')
+line_1= {'abc','def','abc'}
+line_2= {'ghi','def'}
+print(line_1.union(line_2))  # abc,def,ghi
+print(line_1.intersection(line_2))  # def
+print('A만',line_1.difference(line_2))  # abc
+print('B만',line_2.difference(line_1))  # ghi
+
+print('실습6: 두 시점의 이벤트 센서 추적하기')
+sensor_today= {'s1','s2','s3'}
+sensor_yester={'s3','s4','s5'}
+print('신규:', sensor_today.difference(sensor_yester))  # s2, s1
+print('지속:',sensor_today.intersection(sensor_yester))  # s3
+

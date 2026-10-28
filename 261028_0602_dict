@@ -1,0 +1,129 @@
+# 딕셔너리
+# 형식: {키: 값, 키: 값}  - 키는 문자열
+# - 리스트는 번호(인덱스)로 찾지만 딕셔너리는 이름[키]으로 찾는다.
+
+# sensors = {'모터온도': 78, '진동': 0.5}
+# print(sensors)
+# print(sensors['모터온도'])  # 78
+# print(type(sensors))    # class dict
+# # print(sensors['유량'])   # key error
+
+# # 추가 / 수정 / 삭제
+# # 형식: 딕셔너리[키] = 값 (없는키 - 추가, 있는 키 - 수정)
+# # 형식: (삭제) del 딕셔너리[키]
+
+# sensors['펌프압력'] = 95     # 추가
+# sensors['모터온도'] = 80     # 수정
+# del sensors['진동']         # 삭제    (없는 키 삭제는 오류)
+# print(sensors)             # {'모터온도': 80, '펌프압력': 95}
+
+# # get / in
+# # 형식: 딕셔너리.get(키,기본값)    / 키 in 딕셔너리
+# print(sensors.get('유량'))      # None 
+# print(sensors.get('유량',0))    # 0 -> 없는 키를 기본값으로 조회
+# print('모터온도' in sensors)     # true (키만 포함 여부 확인가능)
+# print(80 in sensors)            # False (값은 확인 안됨)
+
+# print('실습1: 딕셔너리 만들고 다루기')
+# sensors= {'모터온도': 56, '회전': 2}
+# print(sensors['모터온도'])  # 56: 키로 값 꺼내기
+# sensors['펌프압력']= 15     # 새 키로 추가
+# sensors['모터온도']= 40     # 기존키로 수정
+# print(sensors)
+# print(sensors.get('유량',1))  # 1
+# print('모터온도'in sensors)  # True
+
+# # keys/ values / items / len
+# sensors = {'모터온도': 78, '진동': 0.5}
+# print(list(sensors.keys()))   # ['모터온도','진동']: 키가 list형식으로 출력
+# print(list(sensors.values()))  # [78, 0.5]: 값이 list형식으로 출력
+# avg=sum(sensors.values())/len(sensors)
+# print(avg)
+
+# for name, value in sensors.items():
+#     print(name,value)
+
+# # for k in sensors.keys()
+# # for v in sensors.values()
+
+# # update - 여러 항목 한번에 갱신(키가 있으면 수정, 없으면 추가)
+# d = {'온도': 78}
+# d.update({'온도': 80, '압력': 95})
+# print(d)
+
+# print('실습2: update로 여러 값 한번에 갱신하기')
+# sensors= {'모터온도': 78, '진동': 0.5}
+# new= {'압력': 3, '진동': 1.6}
+# sensors.update(new)
+# print(sensors)
+# del sensors ['압력']
+# print('센서수:',len(sensors))  # 센서수: 2
+
+# print('실습3: 딕셔너리로 통계 내기')
+# sensors= {'모터온도': 78, '진동': 0.5, '압력':95}
+# avg= sum(sensors.values())/len(sensors)
+
+# print('평균:',round(avg,1))
+# for key,value in sensors.items():
+#     if value == max(sensors.values()):
+#         print('최댓값 센서:',key,value)
+
+# # 딕셔너리의 값에 리스트/딕셔너리 - 중첩 딕셔너리
+# plant= {
+#     '1번모터': {'온도': 78,'상태': '정상'},
+#     '2번펌프': {'압력':95, '상태': '경고'}
+# }
+
+# print(plant['2번펌프']['압력'])  #95
+
+
+print('실습4: zip으로 센서명-값 매핑하기')
+names= ['모터온도','진동','압력']
+values= [78,0.5,95]
+sensors= dict(zip(names,values))  # 두개의 리스트를 dict로 묶기
+print(sensors)  # {'모터온도': 78, '진동': 0.5, '압력': 95}
+for name, value in sensors.items():
+    print(name,':',value)
+
+print('실습5: 임계값으로 경고 센서 분류하기')
+values= {'온도': 78, '진동': 0.5, '압력': 95}
+max= {'온도': 80, '진동': 0.4, '압력': 100}
+warnings= []
+
+for name,value in values.items():
+    if value > max[name]:  # 딕셔너리이름[키]로 값을 가져올 수 있다.
+        warnings.append(name)
+        print('경고센서:',warnings)
+
+print('실습6: 중첩 딕셔너리로 설비 관리하기')
+plant= {
+    '1번모터': {'온도': 85,'상태': '정상'},
+    '2번펌프': {'압력': 77, '상태': '경고'},
+    '3번터빈': {'온도': 90, '상태': '경고'}
+}
+print(plant['2번펌프']['압력'])  # 77
+for name, info in plant.items():
+   if info['상태']=='경고':
+        print(name, '점검필요')
+
+print('실습7: 표 데이터를 딕셔너리로 변환하기')
+rows=['온도,78.0','압력,95.0','진동,0.5']  # 세개의 row가 리스트형태로 들어있다
+sensors2={}  # 딕셔너리로 변환 후 담을 상자
+
+for row in rows:    # rows속 3개의 row를 각 덩어리로 인식하겠따
+    name,value = row.split(',')  # row를 name과 value로 분리하겠다
+    sensors2[name]=float(value)  # 리스트를 딕셔너리로 변환
+print(sensors2)  # 딕셔너리 형태로 출력
+
+print('실습8: 센서데이터 통합 정리')
+sensors= {'온도': 78, '진동': 0.5, '압력': 105} # dict
+max= {'온도': 80, '진동': 0.4, '압력': 100}  # dict
+warnings= set() # set
+
+avg= round(sum(sensors.values())/len(sensors.keys()),1)
+print('평균',avg)
+
+for name,value in sensors.items():
+    if value>max[name]:
+        warnings.add(name)
+print('위험센서', sorted(warnings))        
