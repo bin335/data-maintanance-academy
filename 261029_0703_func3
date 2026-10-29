@@ -1,0 +1,55 @@
+# 함수 설계와 활용
+
+# 기본값 인자
+# 형식:
+# def 함수(필수 매개변수, 선택=기본값): 필수 매개변수가 앞에 나와야한다.
+
+# 거의 항상 같은 값을 매번 적는 번거로움을 줄임, 필요할 때만 덮어쓴다
+def report(name,value,unit='도'):  # unit= 반복되는 출력값
+    print(f'{name}: {value}{unit}')
+report('압축기1',75.3)
+report('펌프1', 7.2, 'bar')   # 기본문자('도')에서 bar로 덮어쓰기해줌
+
+print('실습1: 기본값 인자 함수 만들기')
+def report(value,limit=80):  # 기본값(80)으로 limit을 지정해줌
+    if value>=limit:
+        print(f'{value}-> 경고')
+    else:
+        print(f'{value}-> 정상')
+report(78)
+report(95)
+report(50,40)
+
+print('실습2: 지역변수 관찰하기')
+def greet():
+    x= 50
+    print(x) # greet함수내부에서 지역변수 출력
+greet() # 함수호출 -> 내부 코드 실행
+# print(x)  # 밖에서 호출 -> nameerror
+
+# 함수 조합
+def get_avg(values):
+    return sum(values)/len(values)
+
+def judge(avg,limit=80):
+    if avg>limit:
+        return '위험'
+    else:
+        return '정상'
+temps= [75,88,91]
+avg = get_avg(temps)  # values=temps라고 정의하고, 이걸로 평균을 구하겠다는 뜻
+
+print(round(avg,1),judge(avg))
+
+print('실습3: 처리 흐름 만들기')
+def get_avg(values):
+    return sum(values)/len(values)
+
+def judge(avg,limit=85):
+    if avg<=limit:
+        return '정상'
+    else:
+        return '위험'
+values= [15,85,90]
+avg= get_avg(values)
+print(round(avg,1), judge(avg))

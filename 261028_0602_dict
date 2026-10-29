@@ -112,7 +112,7 @@ sensors2={}  # 딕셔너리로 변환 후 담을 상자
 
 for row in rows:    # rows속 3개의 row를 각 덩어리로 인식하겠따
     name,value = row.split(',')  # row를 name과 value로 분리하겠다
-    sensors2[name]=float(value)  # 리스트를 딕셔너리로 변환
+    sensors2[name]=float(value)  # sensors2딕셔너리에 key=name, 값=value로 저장하겠다는 뜻
 print(sensors2)  # 딕셔너리 형태로 출력
 
 print('실습8: 센서데이터 통합 정리')
