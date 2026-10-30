@@ -1,0 +1,70 @@
+# 파일 입출력
+# open()
+# 형식: open(파일명, 모드, encording)
+# - 모드: r=읽기, w= 새로쓰기, a= 이어쓰기
+# - encording = 'utf-8 => 한글이 깨지지 않도록 하는 것
+
+FILE= 'data/08_press_13_261029_3.csv'
+
+f=open(FILE,'r',encoding='utf-8')  # r: 내용읽기
+text= f.read()  # 전체 범위 읽음, 한덩어리 문자열 반환
+print(text) 
+f.close()     # 파일을 열고 난 후 꼭 닫기까지 해주어야함
+
+
+f=open(FILE,'r',encoding='utf-8')
+lines= f.readlines()  # 줄단위 리스트 전체 반환
+print(type(lines),len(lines))  # 타입: list, len: 총 13줄
+f.close()
+
+# with open - 블록이 끝나면 자동 닫힘
+with open(FILE, 'r', encoding='utf-8') as f:   
+    for line in f:
+        print(line.strip()) # 블록 밖으로 나가면 자동 닫힘-> close할 필요 x
+
+# write
+with open('data/test','w',encoding='utf-8') as f:
+    f.write('쓰기 테스트')
+
+print('실습1: open으로 파일 읽기') 
+FILE= 'data/test'
+f= open(FILE,'r',encoding='utf-8')
+print(f.read())
+
+f= open(FILE,'r',encoding='utf-8')
+print(f.readlines())
+f.close
+
+print('실습2: with open으로 파일에 쓰기')
+with open(FILE,'w',encoding='utf-8') as f:
+    f.write('안녕하세요.\n반갑습니다')
+
+with open(FILE,'r',encoding='utf-8') as f:
+    print(f.read())
+
+print('실습3; a모드로 기록 이어붙이기')
+with open(FILE,'a',encoding='utf-8') as f:
+    f.write('\n오늘 하루도 힘내세요.\n껄껄껄')
+with open(FILE,'r',encoding='utf-8') as f:
+    print(f.read())   
+
+print('실습4: csv.reader로 CSV읽기')
+import csv
+with open('data/08_press_13_261029_3.csv','r',encoding='utf-8') as f:
+    reader=csv.reader(f)
+    for row in reader:
+        print(row)
+
+# csv.writer
+#- 한 행의 값들을 리스트로 묶는다. (모든 행의 열 개수를 맞춰야함)
+# open의 맨 끝에 newline=''옵션을 넣어, 빈 줄이 끼는 것을 막는다.
+# 리스트로 묶는 것이기 때문에, 각 행의 값들의 타입이 같아야한다.
+
+print('실습5: csv.writer로 CSV쓰기')
+import csv
+with open('data/08_press_13_261029_3.csv','w',encoding='utf-8',newline='') as f:
+    writer= csv.writer(f)
+    writer.writerow(['시각', '설비'])
+    writer.writerow(['09:00', 'PUMP-01'])
+with open('data/08_press_13_261029_3.csv','r',encoding='utf-8') as f:
+    print(f.read())

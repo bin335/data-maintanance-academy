@@ -1,0 +1,102 @@
+# 모듈/ 패키지/ 라이브러리
+# - 모듈: 기능을 모아둔 .py파일 하나
+# - 패키지: 모듈을 모아둔 폴더
+# - 라이브러리: 위에 사항들을 통칭
+
+# import 방식
+# 형식: import 모듈
+import math   # math라는 모듈을 통째로 불러옴
+print(math.sqrt(16))  # 4.0
+from math import sqrt,ceil   # 일부만 불러옴 -> 모듈명 없이 바로 사용
+print(sqrt(16),ceil(4.2))
+import math as m  # as별칭: 모듈에 짧은 이름을 붙이는 것
+print(m.sqrt(16))
+
+print('실습1: import세 방식으로 모듈 가져오기')
+import math
+print(math.sqrt(25))
+
+from math import sqrt,ceil  # ceil: x보다 큰 정수값 중 가장 작은 값을 반환
+print(sqrt(25),ceil(4.7))
+
+import math as m
+print(m.sqrt(25))
+
+# 표준 라이브러리 - math/random/datetime
+# - 파이썬 설치 시 함께 깔리는 검증된 모듈들
+import random  # 무작위로 숫자 1개 출력
+import datetime # 날짜 -> 시간 순서로 출력
+
+print(random.randint(1,100))
+print(datetime.datetime.now())
+
+print('실습2: 표준 라이브러리로 센서값 만들기')
+x= random.randint(1,100)
+print(x)
+print(math.sqrt(x))
+
+# ///////////////
+# 경로와 os 모듈
+# - 파일을 다루려면 어디에 있는지 경로를 알아야 한다
+# 1) 절대경로
+#  - 최상위부터 전체 주소  
+# 2) 상대경로
+#  - 지금 실행중인 위치를 기준으로 한 주소
+import os
+print('현재 실행 위치(절대경로:)',os.getcwd())  # C:\Users\ponar\OneDrive\바탕 화면\빅데이터아카데미
+
+# 폴더 유무 확인
+print(os.path.exists('data'))  # 현재 data라는 폴더가 있기에 -> True
+
+# 폴더 목록 확인
+files= os. listdir('data')
+print(files)   # ['08_press_13_261029_3.csv']
+
+# 폴더명 + 파일명 -> 경로
+path=os.path.join('data','08_press.csv')
+if os.path.exists(path):
+    print('파일 경로:', path)
+
+print('실습3: os로 폴더 목록 살펴보기')
+import os
+print('현재 작업 폴더',os.getcwd())
+
+file_list= os.listdir('data')
+print(file_list)
+
+for file in file_list:
+    print(file)
+for file in file_list:
+    if file.endswith('.csv'):
+        print(file)
+
+print('실습4: os로 파일 존재 확인하기')
+import os
+path= os.path.join('data','test')
+print(os.path.exists(path))   # 경로가 제대로 join이 되었는지 확인
+if os.path.exists(path):
+    print('파일있음')
+else:
+    print('파일없음')
+
+print('실습5: datetime으로 점검 기록 남기기')
+import os
+import datetime
+files= os.listdir('data')
+time= datetime.datetime.now()
+print(f'파일 {files}개, 점검시각 {time}')
+
+print('실습6: 폴더에서 .csv파일만 골라내기')
+import os
+files= os.listdir('data')
+csv=[]
+
+for file in files:
+    if file.endswith('.csv'):
+        csv.append(file)
+
+paths= []
+for file in csv:
+    path=os.path.join('data',file)
+    paths.append(path)
+print(paths)

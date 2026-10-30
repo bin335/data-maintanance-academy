@@ -53,3 +53,24 @@ def judge(avg,limit=85):
 values= [15,85,90]
 avg= get_avg(values)
 print(round(avg,1), judge(avg))
+
+print('실습4: 센서 분석 함수 세트 만들기')
+def get_avg(values):
+    return sum(values)/len(values)
+
+def judge(avg,limit= 80):
+    if avg>limit:
+        return '경고'
+    else:
+        return '정상'
+values= [15,85,90]
+avg= get_avg(values)  # 2번의 avg와 1번의 get_avg(values) 두 변수를 연결
+print(round(avg,1),judge(avg))
+
+# 표준 라이브러리 - math/random/datetime
+# - 파이썬 설치 시 함께 깔리는 검증된 모듈들
+import random
+import datetime
+
+print(random.randint(1,100))
+print(datetime.datetime.now())
