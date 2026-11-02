@@ -1,0 +1,56 @@
+# # # 각종 예외 상황
+# # temp=int('스물')  # Value error
+# # result = 10/0   # ZerodivisionError
+# # undefined_var   # NameError
+
+
+# # try-except 구조
+# try:
+#     temp=int('스물')
+# except ValueError:
+#     print('Value error')
+# try:
+#     result= 10/0
+# except ZeroDivisionError: # Zerodivisionerror
+#     print('Zerodivisionerror')
+
+# try:
+#     print(undefined_var)
+# except NameError:
+#     print('NameError')
+
+# print('실습2: try-except로 오류 넘기기')
+# try:
+#     temp= input('온도: ')
+#     temp= int(temp)
+#     print(temp)
+
+# except ValueError:
+#     print('숫자를 입력하세요.')
+
+# print('프로그램이 계속됩니다.')
+
+# 여러 except
+row= 'P-01,102'.split(',')
+try:
+    code_no=int(row[3])
+except ValueError:
+    print('숫자아님')
+except IndexError:
+    print('칸 부족')
+
+print('실습3: 구체적 예외로 입력 검증하기')
+while True:  # break를 만날 때까지 반복
+    value = input('값 (종료: q): ')
+    if value == 'q':
+        break  # 반복문 종료
+
+    try:
+        data = int(value)
+        print(100 / data)
+    except ValueError:
+        print('숫자아님')
+
+    except ZeroDivisionError:
+        print('0으로 나눌 수 없음')
+    
