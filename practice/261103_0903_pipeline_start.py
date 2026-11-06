@@ -10,7 +10,7 @@ BASE = Path(__file__).resolve().parent  # practice폴더
 DATA_PATH = BASE.parent/"data"/"09_ict_inspection_dirty_15_261102_2.csv"
 # BASe.parent: practice의 한단계 상위 폴더 -> data-maintanance folder
 REPORT_PATH = BASE / "09_report.txt"
-RUN_TO_STEP = 5  # 실습 1 완성 후 2, ... 6으로 변경
+RUN_TO_STEP = 6 # 실습 1 완성 후 2, ... 6으로 변경
 
 
 def read_csv_data(path):
@@ -40,7 +40,7 @@ def group_by_part(rows):
         except IndexError:
             dropped += 1
             continue
-        if p not in by_part:   # 기존에 해당 부품명이 딕셔너리에 없을 경우
+        if p not in by_part:   # 기존에 해당 부품명이 딕셔너리에 없을 경우-> 빈 리스트 처리
             by_part[p]=[]
 
         by_part[p].append(row)  # 기존에 값이 있을 경우 값 추가
@@ -67,10 +67,10 @@ def calc_stats(rows, column=2):
             return None  
         
     return {
-        '숫자': len(values),
-        '평균': round(sum(values) / len(values),2),
-        '최소': min(values),
-        '최대': max(values)  
+        'count': len(values),
+        'avg': round(sum(values) / len(values),2),
+        'min': min(values),
+        'max': max(values)  
     }    # 계산결과를 딕셔너리 형태로 반환
     raise NotImplementedError("실습 3: 통계 함수를 완성하세요")
 
@@ -106,24 +106,31 @@ def save_report(path, total_rows, valid_rows, rejected, stats):
         f'전체: {total_rows} 행',
         f'유효: {len(valid_rows)}건',
         f'제외: {len(rejected)}건',
-        f'평균: {stats['평균']}',
-        f'최대: {stats['최대']}',
-        f'최소: {stats['최소']}'
+        f'평균: {stats['avg']}',
+        f'최대: {stats['max']}',
+        f'최소: {stats['min']}'
     ]
 
     with open(path,'w',encoding='utf-8') as f:
             f.write('\n'.join(lines))
                 # \n: 리스트의 문자열들을 줄바꿈-> join: 문자열들을 연결 후 UTF-8파일로 저장함
 
-    raise NotImplementedError("실습 5: 리포트 저장 함수를 완성하세요")
+    # raise NotImplementedError("실습 5: 리포트 저장 함수를 완성하세요")
 
 
 def verify_part_counts(valid_rows):
     """[실습 6] 유효 행을 부품별로 다시 묶고 합계가 전체와 같은지 확인."""
     # TODO: group_by_part(valid_rows)를 재사용하고
     # 각 부품에 calc_stats(part_rows, 2)를 적용해 건수를 합산하세요.
-   
+    check_sum = 0
     
+    for v in sorted(by_valid):
+        check_sum += calc_stats(by_valid[v], 2)["count"]
+    print(check_sum == len(valid_rows))
+
+
+
+
     raise NotImplementedError("실습 6: 부품별 검증 함수를 완성하세요")
 def main():
     header, rows = read_csv_data(DATA_PATH)
