@@ -1,0 +1,81 @@
+import pandas as pd
+
+F_SHOT= 'data/13_diecasting_shot_24_261110_2.csv'
+F_SMALL='data/13_diecasting_small_24_261110_3.csv'
+
+# 열 골라내기
+# - 열 이름
+df= pd.read_csv(F_SMALL)
+dfs=pd.read_csv(F_SHOT)
+
+print('이름으로 앞 3개:',df['실린더압력'].head(3).tolist()) # 이름으로 앞 3개: [214.0, 217.0, 215.0]
+
+# 단일 열 선택
+# - df['실린더압력']
+# - 결과값은 series
+print(df['실린더압력'])
+# 0     214.0
+# 1     217.0
+# 2     215.0
+
+# 복수 열 선택
+#- 여러 열은 이름들을 리스트로 묶어서 넣는다
+#- 결과 값은 Dataframe
+cols = df[['형체력', '실린더압력']]
+print(cols)
+
+print('실습1: 열 골라 꺼내기')
+print(df['형체력'].head(3),df['형체력'].dtypes)
+print(df[['실린더압력','형체력']].shape,df[['실린더압력','형체력']].dtypes)
+# (30, 2)
+# 실린더압력    float64
+# 형체력      float64
+# dtype: object
+print(df[['형체력']].dtypes) 
+# 형체력    float64
+
+# 행 선택
+# - 라벨과 위치 번호의 차이
+# - 라벨: 그 행에 붙은 이름표 = 인덱스 값
+# - 위치 번호: 맨 위에서부터 몇 번째인지, 항상 0부터
+
+sorted= df.sort_values('형체력',ascending=False)
+
+print('정렬 후 인덱스 앞 4개:', sorted.index[:4].tolist())
+print('정렬 후 iloc[0]샷:',int(sorted.iloc[0]['샷']))
+print('정렬후 loc[0]샷:',int(sorted.loc[0,'샷']))
+# 정렬 후 인덱스 앞 4개: [22, 17, 27, 12]
+# 정렬 후 iloc[0]샷: 23 -> 위치(순서)
+# 정렬후 loc[0]샷: 1 -> 라벨(이름표)
+
+print(df.loc[0:4].shape)  # (5, 8)
+print(df.iloc[0:4].shape)  # (4, 8)
+
+# 행,열 동시 선택
+# df.loc[행,열] - 열이름 사용O , 조건 사용o
+# df.iloc[행,열] - 열이름 사용x, 조건 사용x -> 숫자로 접근
+print(df.loc[0:4,['실린더압력','형체력']].shape) # (5, 2)
+print(df.iloc[0:5,[2,6]].shape) # (5, 2)
+
+print('실습2: 라벨과 번호로 행 골라내기')
+print('정렬 전 위치 iloc[0]샷:',int(df.iloc[0]['샷'])) # 1
+print('정렬 전 라벨 loc[0]샷:',int(df.loc[0,'샷'])) # 1
+ 
+sorted= df.sort_values("형체력", ascending=False)
+print('정렬 후 위치 샷:',int(sorted.iloc[0]['샷'])) # 23
+print('정렬후 라벨 샷:',int(sorted.loc[0,'샷']))  # 1
+
+print('실습3: 행과 열을 함께 잘라내기')
+print(df.columns.tolist()) # ['샷', '설비ID', '실린더압력', '주조압력', '사이클타임', '비스킷두께', '형체력', '품질등급']
+print(df.loc[:4,['실린더압력','형체력']].shape)  # (5,2)
+print(df.iloc[0:5,[2,6]].shape) # # (5,2)
+
+print('실습4: 필요한 구간만 뽑아내기')
+dfs= pd.read_csv(F_SHOT)
+
+a= dfs.loc[:9,['설비ID','비스킷두께','품질등급']]
+print(a.shape) # (200, 8)
+
+b= dfs.iloc[-5:,[1,5,7]] 
+print(b.shape) # (10, 3)
+print(b['샷'].tolist()) # (5, 3)

@@ -1,0 +1,144 @@
+import pandas as pd
+import numpy as np
+
+F= 'data/12_metro_compressor_22_261109_1.csv'
+FD= 'data/12_metro_digital_22_261109_3.csv'
+
+df= pd.read_csv(F)
+# 데이터 미리보기 및 구조 파악
+df2=pd.read_csv(FD)
+
+# 1) 앞 부분 미리보기
+# - df.head() > 기본값은 위에서 5줄, 숫자 지정 가능
+
+# 2) 뒷 부분 미리보기
+# - df.tail() > 밑에서 5줄, 숫자 지정 가능
+
+print('실습1: 앞뒤를 미리 보고 첫인상 잡기')
+print(df.head()) # 3번의 배출압력= 빈칸
+print(df.tail()) # 199
+print(df.head(3),df.tail(10))
+
+# 3) 행/열 크기
+# - df.shape: 속성이라 괄호를 뒤에 안 붙힌다
+print(df.shape)  # (행,열) (200, 7)
+
+# 4) 열 이름 목록
+# - df.columns   > 인덱스 형태로 출력
+# - df.columns.tolist()  > 목록으로 보기 좋게
+print(df.columns.tolist())  # ['측정시각', '압축압력', '배출압력', '저장압력', '오일온도', '모터전류', '가동상태']
+# 여기서 나오는 값으로 특정 열의 데이터 값 추출
+
+# 5) 행 번호표
+# - df.index
+print(df.index)  # RangeIndex(start=0, stop=200, step=1)
+# 0부터 시작해서 199까지 1씩 증가하는 인덱스 번호다.
+
+# 6) 열별 자료형
+# - df.dtypes
+print(df.dtypes)
+print('----------------------')
+print(pd.read_csv(FD).dtypes)
+df2=pd.read_csv(FD,dtype={'압축기':str}) # dtype: object
+
+print('실습2: 표의 뼈대 읽기')
+print(df2.shape)  # (120,4)
+print(df2.columns.tolist())  # ['측정시각', '압축기', '타워', '저압스위치']
+print(df2.dtypes)
+# 측정시각       str
+# 압축기        str
+# 타워       int64
+# 저압스위치    int64
+# dtype: object
+print(df2.head())
+#                   측정시각 압축기  타워  저압스위치
+# 0  2020-02-27 06:38:47   0   0      0
+print('정리: 이 표는 측정시각(문자), 압축기(문자), 타워(0,1), 저압스위치(0,1)4열과 0~199행으로 이루어진 표이다.')
+
+# 기초 통계 요약
+# - 숫자 열들의 평균/최대/최소 등을 한번에 자동 계산, 글자 열은 자동으로 빠짐
+
+print(df.describe().round(2))
+        #  압축압력    배출압력    저장압력    오일온도    모터전류
+# count  200.00  200.00  200.00  199.00  200.00
+# mean     9.17   -0.02    9.17   63.18    2.06
+# std      0.58    0.05    0.58    6.25    2.20
+# min      8.13   -0.03    8.13   50.10    0.03
+# 25%      8.70   -0.02    8.70   58.10    0.04
+# 50%      9.18   -0.02    9.18   62.90    0.04
+# 75%      9.66   -0.02    9.66   68.10    3.81
+# max     10.22    0.60   10.22   75.00    6.19
+
+# 특정 조건에서 통계 필요 시
+state= df['가동상태'].values
+cur= df['모터전류'].values
+print(round(float(np.mean(cur[state=='가동']))))  # 4
+
+print('실습3: info로 결측까지 한 번에 보기')
+print(df.info()) # RangeIndex: 200 entries
+#  0   측정시각    200 non-null    str    
+#  1   압축압력    200 non-null    float64
+#  2   배출압력    200 non-null    float64
+#  3   저장압력    200 non-null    float64
+#  4   오일온도    199 non-null    float64 -> 결측 1건
+#  5   모터전류    200 non-null    float64
+#  6   가동상태    200 non-null    str    
+
+print('실습4: 통계 요약에서 이상 신호 찾기')
+print(df.describe().loc[['mean','50%']].round(2))
+#       압축압력  배출압력  저장압력   오일온도  모터전류
+# mean  9.17 -0.02  9.17  63.18  2.06
+# 50%   9.18 -0.02  9.18  62.90  0.04
+# -> 모터 전류가 크게 어긋남
+
+state= df['가동상태'].values # .values: 열을 배열로 꺼내 쓴다
+cur= df['모터전류'].values
+print('가동',round(float(np.mean(cur[state == '가동'])), 2)) # 가동 4.25
+print('정지',round(float(np.mean(cur[state == '정지'])), 2)) # 정지 0.04
+
+print('실습5: 성격이 다른 두 파일 비교하기')
+print(df.shape,df2.shape) # df: (200, 7) df2: (120, 4)
+print(df.dtypes,df2.dtypes)
+print(df.info(),df2.info()) # df: float64,결측 1개(오일온도)   df2: int64, 결측 0
+
+# 1. 각 열의 값 종류 수 세기
+n = df2.nunique()
+
+# 2. 값 종류가 1~2개인 열 이름 찾기
+cols = n[(n >= 1) & (n <= 2)].index
+print('찾은 열:', cols.tolist())
+
+# 3. 찾은 열을 배열로 꺼내 값과 개수 확인
+for col in cols:
+    arr = df2[col].values
+    print(col, np.unique(arr, return_counts=True))
+
+
+print('실습6: 탐색 리포트 만들기')
+FS= 'data/12_metro_small_22_261109_4.csv'
+dfs= pd.read_csv(FS)
+print('미리보기',dfs.head())
+print('크기',dfs.shape)
+print(dfs.info()) 
+ #   Column  Non-Null Count  Dtype  
+# ---  ------  --------------  -----  
+#  0   측정시각    30 non-null     str    
+#  1   압축압력    30 non-null     float64
+#  2   배출압력    30 non-null     float64
+#  3   저장압력    30 non-null     float64
+#  4   오일온도    29 non-null     float64 -> 결측 1개
+#  5   모터전류    30 non-null     float64
+#  6   가동상태    30 non-null     str    
+# dtypes: float64(5), str(2)
+
+miss= int(df['오일온도'].isna().sum())
+print('오일온도 결측',miss,'건')
+
+stats=df.describe()
+mean_current= round(float(stats['모터전류']['mean']),2)
+median_current= round(float(stats['모터전류']['50%']),2)
+# print(dfs.describe(['mean','50%']].round(2))
+# mean  8.90 -0.02  8.90  54.68  1.38
+# 50%   8.66 -0.02  8.66  55.40  0.04
+print('모터전류 평균/중앙값',mean_current,'/',median_current)
+print('30행 7열, 결측 1건, 모터전류 평균 1.38, 한가운데 값 0.04')

@@ -1,0 +1,116 @@
+import pandas as pd
+F_SHOT='data/13_diecasting_shot_24_261110_2.csv'
+
+# 조건 필터링과 정렬
+df= pd.read_csv(F_SHOT)
+print(df.shape)  # (200, 8)
+
+# 배열에서 하던 것
+arr= df['비스킷두께'].values
+print('배열에서 조건 참 개수:',int((arr>=16).sum()))  # 배열에서 조건 참 개수: 74
+
+# 표에서 하는 것
+print('표에서 조건 참 개수:',int((df['비스킷두께']>=16).sum()))
+
+# 조건 -> boolen Series
+s= df['비스킷두께']>=16
+print(s.head(3).tolist())
+
+print('실습1: 한 조건으로 행 거르기')
+print(df.shape)
+
+arr= df['비스킷두께'].values
+print('배열에서 조건의 참 개수',int((arr>=16).sum())) # 
+
+s=df['비스킷두께']>=16
+print('추출:',len(df[s]))
+
+print('16미만행:',int((df['비스킷두께']<16).sum()))
+print('결측:',df['비스킷두께'].isna().sum())
+
+# 복합 조건
+both=df[(df['비스킷두께']>=16)&(df['사이클타임']>=25)]
+either=df[(df['비스킷두께']>=16)|(df['사이클타임']>=25)]
+print(len(both),len(either)) # 72 86
+
+# 부정 조건
+print(len(df[~(df['품질등급']=='불량')]))  # 180 (~= 뒤집기)
+
+# isin: 값이 포함되어 있는지
+print(len(df[df['품질등급'].isin(['주의','불량'])]))  # 38
+
+# between: 사이클 의미(양쪽 경계 모두 포함)
+print(len(df[df['비스킷두께'].between(10,16)]))  # 117
+
+# 문자열 조건
+#- 숫자 열에는 쓸 수 없음
+# - str.contains: 해당 문자열을 포함하는 값
+print(len(df[df['설비ID'].str.contains('A')]))  # 111
+
+# - str.split, str.replace, str.strip
+print(df['설비ID'].head(1).tolist())  # ['DIE-A-01']
+print(df['설비ID'].str.split('-').head(1).tolist())  # [['DIE', 'A', '01']]
+
+print('실습2: 두 조건 묶기')
+both= (df['비스킷두께']>=16) & (df['사이클타임']>=25)
+print('and 조건:',len(df[both]),'줄')   # and 조건: 72 줄
+
+either= (df['비스킷두께']>=16) | (df['사이클타임']>=25) 
+print('or 조건:',len(df[either]),'줄')  # or 조건: 86 줄
+
+print('불량이 아닌 행',len(df[~df['품질등급'].isin(['불량'])]),'줄')  # 불량이 아닌 행 180 줄
+
+print('실습3: 목록과 범위로 거르기')
+print('품질등급이 주의/불량인 개수:',len(df[df['품질등급'].isin(['주의','불량'])])) # 품질등급이 주의/불량인 개수: 38
+print('비스킷 두께가 10과 16사이인 개수:',len(df[df['비스킷두께'].between(10,16)])) # 비스킷 두께가 10과 16사이인 개수: 117
+
+print(df['설비ID'].head(3))  # A라인 1호기 -> 표에서 DIE-A-01로 표기되어있음.
+print('설비 이름에 A가 들어간 샷:',len(df[df['설비ID'].str.contains('A')])) # 설비 이름에 A가 들어간 샷: 111
+print('A라인 1호기 개수:',len(df[df['설비ID'].str.contains('DIE-A-01')])) # A라인 1호기 개수: 63
+
+# 정렬, 복사본
+# 정렬 - sort_values
+
+asc= df.sort_values('비스킷두께')
+print(asc['비스킷두께'].head(3).tolist())  # [2.0, 2.0, 4.0]
+
+# 다중 키 정렬, 내림 차순
+dec= df.sort_values('사이클타임',ascending=False)
+print(dec['사이클타임'].head(3).tolist())  # [6170.0, 652.3, 125.9]
+
+# 다중 키 정렬
+two= df.sort_values(['비스킷두께','품질등급'],ascending=[True,False])
+print(two['샷'].head(3).tolist())   # [185, 186, 183]
+
+# copy
+x= df[df['품질등급']=='불량'].copy()
+print(x.shape)  # (20, 8)
+x['위험등급']='높음'
+print(x.shape)  # (20, 9)
+
+print('실습4: 비스킷두께 기준으로 정렬하기')
+sorted= df.sort_values('비스킷두께',ascending=False)
+print(sorted['샷'].head().tolist())
+# [198, 192, 43, 171, 197]
+
+asc=df.sort_values(['품질등급','사이클타임'],ascending=[True,False])
+print(asc['샷'].head().tolist()) 
+# [200, 181, 182, 191, 196]
+
+print('실습5: 조건과 정렬로 리포트 만들기')
+both= df[(df['비스킷두께']>= 16)&(df['품질등급'] !='양품')]
+
+sort_df = both.sort_values('비스킷두께',ascending=False)
+report= sort_df[['설비ID','비스킷두께','품질등급']]
+print(report.head(3))
+#          설비ID  비스킷두께 품질등급
+# 197  DIE-A-01   27.0   불량
+# 191  DIE-B-01   26.0   불량
+# 42   DIE-A-01   21.0   주의
+
+# 결측 때문에 제외된 양품 아닌 샷 확인
+error= df[(df['비스킷두께'].isna()) & (df['품질등급'] !='양품')]
+print('결측샷:',len(error))  # 결측샷: 3
+
+
+

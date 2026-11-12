@@ -1,0 +1,131 @@
+import pandas as pd
+F_SHOT= 'data/13_diecasting_shot_24_261110_2.csv'
+F_MASTER='data/13_diecasting_master_24_261110_1.csv'
+
+log= pd.read_csv(F_SHOT)
+master= pd.read_csv(F_MASTER)
+
+print(log.shape)
+print(master.shape)
+
+three= log.head(3)[['샷','설비ID','비스킷두께']]
+print(three.to_string(index=False))
+#  샷     설비ID  비스킷두께
+#  1 DIE-A-01   10.0
+#  2 DIE-B-01   11.0
+#  3 DIE-B-01   11.0
+
+print(three.merge(master,on='설비ID').to_string(index=False))
+#  샷     설비ID  비스킷두께 라인  도입연도  정격형체력 담당반
+#  1 DIE-A-01   10.0  A  2018    280  1반
+#  2 DIE-B-01   11.0  B  2020    320  2반
+#  3 DIE-B-01   11.0  B  2020    320  2반
+
+# merge 기본 사용법
+# - on: 두 표를 잇는 키 열
+# - 행은 예측불가, 열 수는 예측 가능
+# - 왼쪽이 되는표.merge(오른쪽이 되는 표)
+
+#- how: 어느쪽을 다 남길 것인가
+#  -(기본) how= 'inner'
+#  -how= 'left'  : 왼쪽을 다 남기고 짝 없으면 빈 칸
+#  - how='outer' : 양쪽 다 남김
+
+m_inner= log.merge(master, on='설비ID') 
+m_left= log.merge(master, on='설비ID', how= 'left')
+m_outer= log.merge(master, on='설비ID', how= 'outer')
+
+print(m_inner.shape,m_left.shape,m_outer.shape)
+# (185, 12) (200, 12) (201, 12)
+
+print('실습1: 로그에 설비 정보 붙이기')
+print(log.shape)  # 주조 로그 파일 (200,8)
+print(master.shape)  # 설비 대장 파일(5,5)
+print(log.columns.tolist(), master.columns.tolist()) 
+# log ['샷', '설비ID', '실린더압력', '주조압력', '사이클타임', '비스킷두께', '형체력', '품질등급'] 
+# master ['설비ID', '라인', '도입연도', '정격형체력', '담당반']
+print(log.merge(master,on='설비ID').shape)  # (185, 12)
+# -----------------------------------------------------------------
+# 합치기 전후 점검 코드
+print(len(log))   # 200
+print(len(master),master['설비ID'].nunique())  # 5 5
+
+m_left=log.merge(master,on='설비ID',how='left')  
+print(len(m_left))  # 200
+print(int(m_left['라인'].isna().sum()))   # 15
+
+unmatched=m_left[m_left['라인'].isna()]
+print(unmatched['설비ID'].head(1).tolist(),len(unmatched))  # ['DIE-C-01'] 15
+# -----------------------------------------------------------------------------
+print('실습2: 합친 뒤 행수로 검산하기')
+m_inner= log.merge(master,on='설비ID') # 작업기록=log, 설비정보= master
+print(len(m_inner))  # 185 (양쪽에 설비ID가 있는 log만)
+
+m_left= log.merge(master,on='설비ID',how='left')
+print(len(m_left)) # 200: merge기준 왼쪽 값을 남김
+
+m_outer=log.merge(master,on='설비ID',how='outer')
+print(len(m_outer)) # 201: 양쪽 데이터를 전부 (200+1)
+
+unmatched= m_left[m_left['라인'].isna()] 
+# 왼쪽만 남겼을 때, 같은 설비ID를 master에서 못 찾으면, 라인 값이 비어있게됨
+unmatched2= m_outer[m_outer['샷'].isna()] 
+# 양쪽 다 남겼을 때, master에는 있지만 log에서 가져올 샷 값이 없는 행 찾기
+# 병합 후 샷 값이 비어있는 행만 추린다.
+
+print(unmatched['설비ID'].head(1).tolist(),len(unmatched)) 
+ # ['DIE-C-01'] 15: C-01과 연결할 설비정보가 없어서 빠짐.
+print(unmatched2['설비ID'].head(1).tolist(),len(unmatched2))  
+# ['DIE-D-01'] 1: D-01과 연결할 작업 기록이 없어서 빠짐.
+
+# ------------------------------------------------------------------
+# merge는 옆으로 칸을 이어 붙이고, concat은 아래로 줄을 쌓는다      
+# concat은 키 열이 필요 없고, 칸 이름만 맞으면 된다
+
+pd.concat
+
+# ex) 설비 로그를 1차, 2차로 나눠 받은 경우
+part1= log.iloc[:100].reset_index(drop=True)
+part2= log.iloc[100:].reset_index(drop=True)
+print(part1.shape,part2.shape)  # (100, 8) (100, 8)
+
+stacked= pd.concat([part1,part2])
+print(stacked.shape)  # (200, 8)
+print(stacked.index[-3:].tolist())   # [97, 98, 99]
+print(len(stacked.loc[0]))  # 2
+
+# - 번호를 다시 매기기 -> ignore_index
+renumbered=pd.concat([part1,part2],ignore_index=True)
+print(int(renumbered.index[-1])) # 199
+
+# - 칸이(열이) 다른 표를 붙이면 -> 빈 칸
+# 붙이기 전에 두 표의 columns 비교
+# -> set(표1.columns) - set(표2.columns)
+# -----------------------------------------------------------------------------
+
+print('실습3: concat으로 위아래 합치기')
+part1= log.iloc[:100].reset_index(drop=True)
+part2= log.iloc[100:].reset_index(drop=True)
+stacked=pd.concat([part1,part2])
+print(stacked.shape,len(stacked.loc[0]))  # (200, 8) 2
+renumbered= pd.concat([part1,part2],ignore_index=True)
+print(int(renumbered.index[-1])) # 199
+
+print('실습4: 라인 정보를 붙여 점검표 만들기')
+m_left= log.merge(master,on='설비ID',how='left')
+print(len(m_left))
+lines= m_left[m_left['라인'].notna()] 
+print(len(lines)) # 185
+
+bad= lines.loc[lines['품질등급'] != '양품']
+print(len(bad))  # 34
+
+result= bad.sort_values('비스킷두께',ascending=False)
+print(result[['샷','설비ID','라인','비스킷두께','품질등급']].head(5).to_string(index=False))
+#- to_string(index=False): 왼쪽 인덱스를 빼고 문자열로 변환
+#  샷     설비ID 라인  비스킷두께 품질등급
+# 198 DIE-A-01  A   27.0   불량
+# 192 DIE-B-01  B   26.0   불량
+#  43 DIE-A-01  A   21.0   주의
+# 197 DIE-A-01  A   20.0   불량
+# 171 DIE-B-02  B   20.0   주의
