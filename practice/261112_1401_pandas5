@@ -137,7 +137,7 @@ print('검산:',band.value_counts().sum())
 
 # 그룹 집계
 # - 분활 -> 적용 -> 결합 구조
-# - groupby (): 열, []: 데이터
+# - groupby (): 기준열, []: 계산할 열(데이터)
 
 means=df.groupby('냉각기상태')['온도'].mean()
 print(means.round(2))

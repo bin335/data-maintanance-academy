@@ -1,0 +1,71 @@
+import pandas as pd
+
+F_PROG='data/15_사출성형_공정_28_261113_1.csv'
+F_LOG='data/15_사출성형_로그_28_261113_2.csv'
+
+df= pd.read_csv(F_PROG)
+log=pd.read_csv(F_LOG)
+
+from pathlib import Path
+import pandas as pd
+ROOT = Path(__file__).resolve().parent.parent
+PROC = ROOT / 'data' / '15_사출성형_공정_28_261113_1.csv'
+df = pd.read_csv(PROC)
+# 원본 df를 덮어쓰지 않습니다.
+work = df.copy()
+
+# dropna: 행 삭제와 열 삭제
+rows_removed = df.dropna() # 기본 axis=0: 행 제거
+cols_removed = df.dropna(axis=1) # axis=1: 열 제거
+print(rows_removed.shape) # (76, 22)
+print(cols_removed.shape) # (250, 10)
+print(df.shape) # 원본은 (250, 22)
+
+print('실습5: 평균 대체와 중앙값 대체 비교')
+mask = df['최대사출압'].isna()
+print("원본 결측 수:", mask.sum())
+
+mean_value = df['최대사출압'].mean() 
+median_value = df['최대사출압'].median()    
+mean_df = df.copy()  # 원본 보존을 위해
+median_df = df.copy()
+
+mean_df['최대사출압'] = df['최대사출압'].fillna(mean_value)  # fillna: 결측값을 지정값으로 대체
+median_df['최대사출압'] = df['최대사출압'].fillna(median_value)
+
+print("평균 대체 후 결측:", mean_df['최대사출압'].isna().sum())
+print("중앙값 대체 후 결측:", median_df['최대사출압'].isna().sum())
+
+print(mean_df.loc[mask, '최대사출압'].head(3))
+print(median_df.loc[mask, '최대사출압'].head(3))
+
+print('실습6: 설비별 로그의 짧은 온도 누락 처리')
+NA_RULES= {'배럴온도':[999],'사출압력':[0],'스크루속도':[-999]}
+log= pd.read_csv(F_LOG,na_values=NA_RULES,parse_dates=['측정시각']) # 측정시각을 날짜, 시간으로
+log['측정시각']= pd.to_datetime(log['측정시각'],errors='raise')  # 날짜, 시간 변환 명시적 확인
+unknown=log.loc[log['사출기'].isna()].copy()
+known=log.loc[log['사출기'].notna()].copy()
+
+known=known.sort_values(['사출기','측정시각'])
+print(len(known),len(unknown))
+print(int(log.isna().sum().sum()))
+
+# 앞의 값
+candidate= (known.groupby('사출기')['배럴온도'].ffill(limit=1))
+# 온도가 실제로 있었던 시각만 표시
+observed_at=known['측정시각'].where(known['배럴온도'].notna())
+print(observed_at)
+# 마지막으로 온도가 있었던 시각
+last_time= observed_at.groupby(known['사출기']).ffill()
+# 현재 기록의 시각- 마지막으로 온도를 실제 측정한 시각
+gap= known['측정시각']- last_time
+can_fill= (known['배럴온도'].isna() & candidate.notna()
+           & gap.le(pd.Timedelta('2min')))
+# gap.le(pd.Timedelta('2min')))
+# - .le: 이하인지 비교 (ge는 이상)
+# - pd.Timedelta('2min'): 2분 간격
+
+# - 허용 위치에 온도 넣기
+known.loc[can_fill,'배럴온도']=candidate.loc[can_fill]
+
+print('실습7: ')

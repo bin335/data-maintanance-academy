@@ -1,0 +1,18 @@
+import pandas as pd
+
+F_die='data/16_diecasting_30_261117_1.csv'
+F_wel='data/16_welding_30_261117_2.csv'
+
+die= pd.read_csv(F_die)
+wel=pd.read_csv(F_wel)
+
+Q1=die['사이클타임'].quantile(0.25)
+Q3=die['사이클타임'].quantile(0.75)
+IQR= Q3-Q1
+lower= Q1 - 1.5 * IQR
+upper= Q3 + 1.5 * IQR
+
+ct_clipped= die['사이클타임'].clip(lower=lower,upper=upper)
+print(round(ct_clipped.min(),2),round(ct_clipped.max(),2),
+      round(ct_clipped.mean(),2))   # 20.6 58.61 28.28
+   

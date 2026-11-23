@@ -1,0 +1,39 @@
+import pandas as pd
+
+F_die='data/16_diecasting_30_261117_1.csv'
+F_wel='data/16_welding_30_261117_2.csv'
+
+die= pd.read_csv(F_die)
+wel=pd.read_csv(F_wel)
+
+print('실습1: 주조데이터 구조, 분포 살펴보기')
+print(die.head(3), wel.head(3))
+print(die.shape, die.columns.tolist())
+print(die.info())
+
+print('실습2: 한 컬럼의 최소, 최대, 범위')
+print('최대',die['실린더압력'].min())
+print('최소',die['실린더압력'].max())
+print('범위',die['실린더압력'].max()-die['실린더압력'].min())
+
+print('실습3: 정렬해서 이상치 후보 찾기')
+dec= die.sort_values('사이클타임',ascending=False).to_string(index=False)
+print(dec) 
+# 이상치 후보: 6170초, 652.3초
+# 정상치 범위: 20.9~ 36.6초
+
+print('실습4: 평균, 중앙값으로 이상치 영향 확인')
+print('평균',die['사이클타임'].mean()) 
+print('중앙값',die['사이클타임'].median())
+normal= die.loc[die['상태']==0]
+print('정상 상태일 때 사이클타임 평균',round(normal['사이클타임'].mean(),2))
+
+print('실습5: quantile로 q1,q2,q3')
+q1=die['실린더압력'].quantile(0.25)
+q2= die['실린더압력'].quantile(0.5)
+q3= die['실린더압력'].quantile(0.75)
+mid= die['실린더압력'].median()
+print(q1,q2,q3)
+print([q2==mid],q2,mid)
+
+

@@ -1,0 +1,7 @@
+import pandas as pd
+
+F_PROG='data/15_사출성형_공정_28_261113_1.csv'
+F_LOG='data/15_사출성형_로그_28_261113_2.csv'
+
+df= pd.read_csv(F_PROG)
+log=pd.read_csv(F_LOG)
